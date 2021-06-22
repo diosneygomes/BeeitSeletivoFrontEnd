@@ -1,0 +1,84 @@
+﻿@page "/CalcularFatorial"
+
+@inject HttpClient Http
+
+@inject NavigationManager NavigationManager
+@inject HttpClient Http
+@using ViewModels
+@using Newtonsoft.Json;
+
+<div class="row">
+    <div class="col-md-4"></div>
+    <div class="col-md-4">
+        <div class="card">
+            <h5 class="card-header">Cálculadora de Fatorial!</h5>
+            <div class="card-body">
+                <form method="get">
+                    <div class="form-group">
+                        <label for="Valor">Digite o valor</label>
+                        <input type="text" class="form-control" @bind="@numero.Valor">
+                        <small id="emailHelp" class="form-text text-muted">O menor número aceito é 1</small>
+                    </div>
+                    <fieldset disabled>
+                        <div class="form-group">
+                            <label for="Resultato">Resultado</label>
+                            <input type="text" class="form-control" @bind="@numero.Resultado">
+                        </div>
+                    </fieldset>
+                    <fieldset disabled>
+                        <div class="form-group">
+                            <label for="Resultato">Expressão</label>
+                            <input type="text" class="form-control" @bind="@numero.Expressao">
+                        </div>
+                    </fieldset>
+                    <div class="col-md-4">
+                        <div class="form-group">
+                            <input type="button" class="btn btn-primary" @onclick="@Calcular" value="Calcular" />
+                            <input type="button" class="btn btn-danger" @onclick="@Cancelar" value="Cancelar" />
+                        </div>
+                    </div>
+                    @if (zeroOuNegativo)
+                    {
+                        <div class="form-group">
+                            <div class="alert alert-danger" role="alert">
+                                O valor mínimo possível a ser digitado é 1
+                            </div>
+                        </div>
+                    }
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+@code{
+
+    NumeroViewModel numero = new NumeroViewModel();
+    bool zeroOuNegativo;
+    private async void Calcular()
+    {
+        if (numero.Valor < 1)
+        {
+            zeroOuNegativo = true;
+            numero.Expressao = "";
+        }
+        else
+        {
+            zeroOuNegativo = false;
+            string url = "https://localhost:44328/Fatorial/" + numero.Valor;
+
+            using (var cliente = new HttpClient())
+            {
+                numero = await Http.GetJsonAsync<NumeroViewModel>(url);
+                HttpResponseMessage resposta = await cliente.GetAsync(url);
+                string json = await resposta.Content.ReadAsStringAsync();
+                numero = JsonConvert.DeserializeObject<NumeroViewModel>(json);
+            }
+        }
+    }
+
+    void Cancelar()
+    {
+        NavigationManager.NavigateTo("CalcularFatorial");
+    }
+}
