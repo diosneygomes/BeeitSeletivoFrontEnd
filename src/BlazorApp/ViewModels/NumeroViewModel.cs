@@ -1,11 +1,11 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
-using System.Linq;
-using System.Threading.Tasks;
 
 namespace BlazorApp.ViewModels
 {
+    /// <summary>
+    /// Entidade que representa uma View Model da entidade Número.
+    /// </summary>
     public class NumeroViewModel
     {
         [Key]

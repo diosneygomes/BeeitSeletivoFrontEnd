@@ -34,7 +34,6 @@
                     <div class="col-md-4">
                         <div class="form-group">
                             <input type="button" class="btn btn-primary" @onclick="@Calcular" value="Calcular" />
-                            <input type="button" class="btn btn-danger" @onclick="@Cancelar" value="Cancelar" />
                         </div>
                     </div>
                     @if (zeroOuNegativo)
@@ -75,10 +74,5 @@
                 numero = JsonConvert.DeserializeObject<NumeroViewModel>(json);
             }
         }
-    }
-
-    void Cancelar()
-    {
-        NavigationManager.NavigateTo("CalcularFatorial");
     }
 }
